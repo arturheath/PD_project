@@ -1,5 +1,5 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
+-- Use DBML to define your database structure
+-- Docs: https://dbml.dbdiagram.io/docs
 
 Table movies {
   movie_id integer [primary key]

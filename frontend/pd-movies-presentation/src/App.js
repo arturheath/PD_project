@@ -1,23 +1,26 @@
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+
+  const [healthStatus, setHealthStatus] = useState(null);
+
+  console.log('healthStatus', healthStatus);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/api/health')
+      .then(response => response.text()) // use .text() instead of .json()
+      .then(data => {
+        console.log('data', data);
+        setHealthStatus(data);
+      })
+      .catch(error => console.error('Error:', error));
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {healthStatus && <p>{JSON.stringify(healthStatus)}</p>}
     </div>
   );
 }

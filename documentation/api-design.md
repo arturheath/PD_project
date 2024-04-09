@@ -5,16 +5,14 @@
 GET /movies
 
 ```
-{
-   [
-      {
-         "movie_id":"integer",
-         "movie_name":"varchar",
-         "year":"integer",
-         "banner":"varchar"
-      }
-   ]
-}
+[
+   {
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "year":"integer",
+      "banner":"varchar"
+   }
+]
 ```
 
 ###  Retrieve all details of a specific movie by movie_id
@@ -31,21 +29,11 @@ GET /movies/{movie_id}
    "categorie_id":{
       "categorie_id":"int",
       "categorie_name":"varchar"
-   },
-   "director_id":{
-      "person_id":"int",
-      "person_fname varchar",
-      "person_lname varchar"
-   },
-   "producer_id":{
-      "person_id":"int",
-      "person_fname":"varchar",
-      "person_lname":"varchar"
    }
 }
 ```
 
-### Create a new movie. Requires movie_name, year, description, banner, categorie_id, director_id, producer_id.
+### Create a new movie. Requires movie_name, year, description, banner, categorie_id.
 
 POST /movies
 
@@ -58,57 +46,179 @@ POST /movies
    "categorie_id":{
       "categorie_id":"int",
       "categorie_name":"varchar"
-   },
-   "director_id":{
-      "person_id":"int",
-      "person_fname":"varchar",
-      "person_lname":"varchar"
-   },
-   "producer_id":{
-      "person_id":"int",
-      "person_fname":"varchar",
-      "person_lname":"varchar"
    }
 }
 ```
+### Delete a movie.
 
+DELETE /movies
 
-## Celebrities
+```
+{
+   "movie_name":"varchar",
+   "year":"integer",
+   "description":"varchar",
+   "banner":"varchar",
+}
+```
 
-### Retrieve a list of all celebrities. 
+## People
 
-GET /celebrities
+### Retrieve all of the directors of a movie.
+
+GET /movies/{movie_id}/directors
 
 ```
 [
    {
-      "person_id":"integer",
-      "person_fname":"varchar",
-      "person_lname":"varchar",
-      "photo":"varchar"
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "director_id":{
+         "person_id":"integer",
+         "person_fname":"varchar",
+         "person_lname":"varchar",
+         "photo":"varchar"
+      }
+   }
+]
+```
+### Retrieve all of the producers of a movie.
+
+GET /movies/{movie_id}/producers
+
+```
+[
+   {
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "producer_id":{
+         "person_id":"integer",
+         "person_fname":"varchar",
+         "person_lname":"varchar",
+         "photo":"varchar"
+      }
+   }
+]
+```
+### Retrieve all the information of a specific director of a movie.
+
+GET /movies/{movie_id}/directors/{director_id}: 
+
+```
+[
+   {
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "director_id":{
+         "person_id":"integer",
+         "person_fname":"varchar",
+         "person_mname":"varchar",
+         "person_lname":"varchar",
+         "photo":"varchar",
+         "birthday":"date"
+      }
+   }
+]
+```
+### Retrieve all the information of a specific producer of a movie.
+
+GET /movies/{movie_id}/producer/{producer_id}: 
+
+```
+[
+   {
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "producer_id":{
+         "person_id":"integer",
+         "person_fname":"varchar",
+         "person_mname":"varchar",
+         "person_lname":"varchar",
+         "photo":"varchar",
+         "birthday":"date"
+      }
    }
 ]
 ```
 
-### Retrieve all details of a specific celebrity by id.
+### Retrieve all the cast of a specific movie.
 
-
-GET /celebrities/{id}
+GET /movies/{movie_id}/cast:
 
 ```
-{
-   "person_id":"integer",
-   "person_fname":"varchar",
-   "person_mname":"varchar",
-   "person_lname":"varchar",
-   "photo":"varchar",
-   "birthday":"date"
-}
+[
+   {
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "person_id":"integer",
+      "person_fname":"varchar",
+      "person_mname":"varchar",
+      "person_lname":"varchar",
+      "photo":"varchar",
+      "birthday":"date"
+   }
+]
 ```
+
+### Add a director to a specific movie.
+
+POST /movies/{movie_id}/directors:
+
+```
+[
+   {
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "director_id":{
+         "person_id":"integer",
+         "person_fname":"varchar",
+         "person_lname":"varchar",
+         "photo":"varchar"
+      }
+   }
+]
+```
+### Add a producer to a specific movie.
+
+POST /movies/{movie_id}/producers:
+
+```
+[
+   {
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "director_id":{
+         "person_id":"integer",
+         "person_fname":"varchar",
+         "person_lname":"varchar",
+         "photo":"varchar"
+      }
+   }
+]
+```
+### Add a person to the cast of a specific movie.
+
+POST /movies/{movie_id}/cast:
+
+```
+[
+   {
+      "movie_id":"integer",
+      "movie_name":"varchar",
+      "person_id":"integer",
+      "person_fname":"varchar",
+      "person_mname":"varchar",
+      "person_lname":"varchar",
+      "photo":"varchar",
+      "birthday":"date"
+   }
+]
+```
+
 
 ### Create a new celebrity
 
-POST /celebrities: 
+POST /people: 
 
 ```
 {
@@ -122,7 +232,7 @@ POST /celebrities:
 
 ### Update a specific celebrity by id. Can update only mnane,lname and photo.
 
-PUT /celebrities/{id}: 
+PUT /people/{id}: 
 
 ```
 {
@@ -143,47 +253,6 @@ POST /categories:
 {
    "categorie_id":"integer",
    "categorie_name":"varchar"
-}
-```
-
-
-## Cast
-
-### Retrieve all details of a specific cast by cast_id.
-
-GET /casts/{cast_id}
-
-```
-{
-   "cast_id":"integer",
-   "movie_id":{
-      "movie_id":"int",
-      "movie_name":"varchar"
-   },
-   "actor_id":{
-      "person_id":"int",
-      "person_fname":"varchar",
-      "person_lname":"varchar"
-   }
-}
-```
-
-### Create a new cast
-
-POST /casts
-
-```
-{
-   "cast_id":"integer",
-   "movie_id":{
-      "movie_id":"int",
-      "movie_name":"varchar"
-   },
-   "actor_id":{
-      "person_id":"int",
-      "person_fname":"varchar",
-      "person_lname":"varchar"
-   }
 }
 ```
 

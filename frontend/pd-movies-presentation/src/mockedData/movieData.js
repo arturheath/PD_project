@@ -1,0 +1,35 @@
+const movies = [
+    {id: 1, title: "The Shawshank Redemption", year: 1994},
+    {id: 2, title: "The Godfather", year: 1972},
+    {id: 3, title: "The Dark Knight", year: 2008},
+    {id: 4, title: "The Godfather Part II", year: 1974},
+    {id: 5, title: "The Lord of the Rings: The Return of the King", year: 2003},
+    {id: 6, title: "Pulp Fiction", year: 1994},
+    {id: 7, title: "Schindler's List", year: 1993},
+    {id: 8, title: "12 Angry Men", year: 1957},
+    {id: 9, title: "Inception", year: 2010},
+    {id: 10, title: "Fight Club", year: 1999},
+    {id: 11, title: "Forrest Gump", year: 1994},
+    {id: 12, title: "The Matrix", year: 1999},
+    {id: 13, title: "Goodfellas", year: 1990},
+    {id: 14, title: "Star Wars: Episode V - The Empire Strikes Back", year: 1980},
+    {id: 15, title: "One Flew Over the Cuckoo's Nest", year: 1975},
+    {id: 16, title: "The Lord of the Rings: The Fellowship of the Ring", year: 2001},
+    {id: 17, title: "Interstellar", year: 2014},
+    {id: 18, title: "Saving Private Ryan", year: 1998},
+    {id: 19, title: "The Silence of the Lambs", year: 1991},
+    {id: 20, title: "The Green Mile", year: 1999},
+    {id: 21, title: "Avengers: Infinity War", year: 2018},
+    {id: 22, title: "Se7en", year: 1995},
+    {id: 23, title: "The Lion King", year: 1994},
+    {id: 24, title: "The Usual Suspects", year: 1995},
+    {id: 25, title: "Life Is Beautiful", year: 1997},
+    {id: 26, title: "City of God", year: 2002},
+    {id: 27, title: "The Lord of the Rings: The Two Towers", year: 2002},
+    {id: 28, title: "Star Wars: Episode IV - A New Hope", year: 1977},
+    {id: 29, title: "Terminator 2: Judgment Day", year: 1991},
+    {id: 30, title: "Back to the Future", year: 1985}
+];
+
+export default movies;
+

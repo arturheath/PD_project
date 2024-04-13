@@ -1,25 +1,37 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css'
+import CardsContainer from "./components/CardsContainer/cardsContainer.jsx";
+import MovieInfo from "./components/MovieContainer/MovieInfo.jsx";
+import movies from "./mockedData/movieData.js";
+
 
 function App() {
-    /*const [healthStatus, setHealthStatus] = useState(null);*/
 
-    /*console.log('healthStatus', healthStatus);
+    // useEffect para carregar a lista de filmes
+
+    const [selectedMovie, setSelectedMovie] = useState(null)
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/health')
-            .then(response => response.text())
-            .then(data => {
-                console.log('data', data);
-                setHealthStatus(data);
-            })
-            .catch(error => console.error('Error:', error));
-    }, []);*/
+        console.log("requesting list of movies", movies)
+        //GET /movies
+    }, [])
+
+    console.log("selectedMovie", selectedMovie)
+
+    const handleMovieSelection = (id) => {
+        setSelectedMovie(id)
+    }
 
     return (
         <>
-            {/*{healthStatus && <p>{JSON.stringify(healthStatus)}</p>}*/}
-            <h1 className='bg-yellow-400'>PD Movies</h1>
+            <div className='flex flex-wrap'>
+                <div className='w-1/2'>
+                    <CardsContainer movies={movies} onMovieClick={handleMovieSelection}/>
+                </div>
+                <div className='w-1/2'>
+                    <MovieInfo id={selectedMovie}/>
+                </div>
+            </div>
         </>
     )
 }

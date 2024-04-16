@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css'
 import CardsContainer from "./components/CardsContainer/cardsContainer.jsx";
 import MovieInfo from "./components/MovieContainer/MovieInfo.jsx";
@@ -6,8 +6,6 @@ import movies from "./mockedData/movieData.js";
 
 
 function App() {
-
-    // useEffect para carregar a lista de filmes
 
     const [selectedMovie, setSelectedMovie] = useState(null)
 
@@ -23,16 +21,14 @@ function App() {
     }
 
     return (
-        <>
-            <div className='flex flex-wrap'>
-                <div className='w-1/2'>
-                    <CardsContainer movies={movies} onMovieClick={handleMovieSelection}/>
-                </div>
-                <div className='w-1/2'>
-                    <MovieInfo id={selectedMovie}/>
-                </div>
+        <div className='flex flex-wrap'>
+            <div className='w-1/4'>
+                <CardsContainer movies={movies} onMovieClick={handleMovieSelection}/>
             </div>
-        </>
+            <div className='w-3/4'>
+                <MovieInfo id={selectedMovie}/>
+            </div>
+        </div>
     )
 }
 

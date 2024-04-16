@@ -1,8 +1,17 @@
 import React, {useEffect} from 'react';
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card.jsx";
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "../ui/card.jsx";
 import {Badge} from "../ui/badge.jsx";
 import {Dialog, DialogContent, DialogTrigger} from "../ui/dialog.jsx";
 import PersonsModal from "../PersonsModal/PersonsModal.jsx";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTrigger
+} from "../ui/alert-dialog.jsx";
 
 const movieInfo = {
     id: 1,
@@ -17,8 +26,6 @@ const style = "text-center bg-blue-500 text-white px-2 py-1 rounded inline-flex 
 
 const MovieInfo = ({id}) => {
 
-    // useEffect para carregar os detalhes do filme
-
     useEffect(() => {
         console.log("id para fazer pedido de detalhes", id)
         console.log("requesting movie details", movieInfo)
@@ -28,10 +35,10 @@ const MovieInfo = ({id}) => {
     console.log("id para fazer pedido de detalhes", id)
 
     return (
-        <div>
+        <>
             {
                 id &&
-                <Card className='flex flex-wrap'>
+                <Card className='h-screen flex flex-wrap'>
                     <CardHeader className='w-1/2'>
                         <CardTitle className='text-2xl text-center'>{movieInfo.title}</CardTitle>
                         <CardDescription className='text-2xl text-center'>{movieInfo.year}</CardDescription>
@@ -62,12 +69,12 @@ const MovieInfo = ({id}) => {
                         </div>
                     </CardHeader>
                     <CardContent className='w-1/2 p-1'>
-                        <img className='my-6' src={movieInfo.poster} alt='poster'/>
+                        <img className='h-screen' src={movieInfo.poster} alt='poster'/>
                     </CardContent>
+
                 </Card>
             }
-            <div>{id}</div>
-        </div>
+        </>
     );
 }
 

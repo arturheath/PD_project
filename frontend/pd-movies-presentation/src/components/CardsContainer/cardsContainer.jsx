@@ -1,9 +1,38 @@
 import {ScrollArea} from "../ui/scroll-area.jsx";
-import {Card, CardDescription, CardHeader, CardTitle} from "../ui/card.jsx";
+import {Card, CardDescription, CardFooter, CardHeader, CardTitle} from "../ui/card.jsx";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTrigger
+} from "../ui/alert-dialog.jsx";
+import React from "react";
 
 const CardsContainer = ({movies, onMovieClick}) => {
 
-    // dúvida se não é melhor uma datatable com filtros e sorting
+    const renderAlertDialog = (id) => {
+        return (
+            <AlertDialog>
+                <AlertDialogTrigger>Delete</AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>Are you sure you want to delete this movie?</AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDelete(id)}>Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        );
+    }
+    const handleDelete = (id) => {
+        console.log("deleting movie", id)
+        // DELETE /movies/:id
+    }
+
+
     return (
         <ScrollArea className="h-screen rounded-md border p-4">
             {
@@ -13,6 +42,9 @@ const CardsContainer = ({movies, onMovieClick}) => {
                             <CardTitle>{movie.title}</CardTitle>
                             <CardDescription>{movie.year}</CardDescription>
                         </CardHeader>
+                        <CardFooter>
+                            {renderAlertDialog(movie.id)}
+                        </CardFooter>
                     </Card>
                 ))
             }

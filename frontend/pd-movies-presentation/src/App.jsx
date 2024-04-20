@@ -21,14 +21,16 @@ function App() {
     }
 
     return (
-        <div className='flex flex-wrap'>
-            <div className='w-1/4'>
-                <CardsContainer movies={movies} onMovieClick={handleMovieSelection}/>
+        <>
+            <div className='flex flex-wrap'>
+                <div className='w-1/4'>
+                    <CardsContainer movies={movies} onMovieClick={handleMovieSelection}/>
+                </div>
+                <div className='w-3/4'>
+                    <MovieInfo id={selectedMovie}/>
+                </div>
             </div>
-            <div className='w-3/4'>
-                <MovieInfo id={selectedMovie}/>
-            </div>
-        </div>
+        </>
     )
 }
 

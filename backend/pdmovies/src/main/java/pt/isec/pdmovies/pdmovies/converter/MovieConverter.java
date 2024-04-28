@@ -1,8 +1,6 @@
 package pt.isec.pdmovies.pdmovies.converter;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
 import pt.isec.pdmovies.pdmovies.dto.CelebrityDto;
 import pt.isec.pdmovies.pdmovies.dto.MovieDto;
 import pt.isec.pdmovies.pdmovies.dto.MovieSaveDto;

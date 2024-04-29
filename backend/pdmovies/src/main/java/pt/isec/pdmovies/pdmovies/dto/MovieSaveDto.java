@@ -20,5 +20,5 @@ public class MovieSaveDto {
     private String description;
     private String banner;
     private Category category;
-    private Set<UUID> celebrities = new HashSet<>();
+    private Set<UUID> persons = new HashSet<>();
 }

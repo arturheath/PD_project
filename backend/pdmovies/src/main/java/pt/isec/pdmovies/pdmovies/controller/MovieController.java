@@ -3,7 +3,7 @@ package pt.isec.pdmovies.pdmovies.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pt.isec.pdmovies.pdmovies.dto.CelebritySaveDto;
+import pt.isec.pdmovies.pdmovies.dto.PersonSaveDto;
 import pt.isec.pdmovies.pdmovies.dto.MovieDto;
 import pt.isec.pdmovies.pdmovies.dto.MovieSaveDto;
 import pt.isec.pdmovies.pdmovies.enums.Role;
@@ -49,13 +49,13 @@ public class MovieController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{movieId}/celebrities")
+    @GetMapping("/{movieId}/people")
     public ResponseEntity<MovieDto> getMovieActors(@PathVariable UUID movieId, @RequestParam(required = false) Role role) {
-        return ResponseEntity.ok(movieService.getMovieWithFilteredCelebrities(movieId, role));
+        return ResponseEntity.ok(movieService.getMovieWithFilteredPersons(movieId, role));
     }
 
-    @PostMapping("/{movieId}/celebrities")
-    public ResponseEntity<MovieDto> addCelebritiesToMovie(@PathVariable UUID movieId, @RequestBody List<CelebritySaveDto> celebrityDtos) {
-        return ResponseEntity.ok(movieService.addCelebritiesToMovie(movieId, celebrityDtos));
+    @PostMapping("/{movieId}/people")
+    public ResponseEntity<MovieDto> addPersonsToMovie(@PathVariable UUID movieId, @RequestBody List<PersonSaveDto> personDtos) {
+        return ResponseEntity.ok(movieService.addPersonsToMovie(movieId, personDtos));
     }
 }

@@ -1,0 +1,17 @@
+spring:
+  main:
+    allow-circular-references: true
+  application:
+    name: pdmovies
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pdmovies
+    username: user
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+

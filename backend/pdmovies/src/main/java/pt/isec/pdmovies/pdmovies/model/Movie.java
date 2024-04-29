@@ -45,8 +45,8 @@ public class Movie {
     private Category category;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
-    @JoinTable(name = "movie_celebrity",
+    @JoinTable(name = "movie_person",
             joinColumns = @JoinColumn(name = "movie_id"),
-            inverseJoinColumns = @JoinColumn(name = "celebrity_id"))
-    private Set<Celebrity> celebrities = new HashSet<>();
+            inverseJoinColumns = @JoinColumn(name = "person_id"))
+    private Set<Person> persons = new HashSet<>();
 }

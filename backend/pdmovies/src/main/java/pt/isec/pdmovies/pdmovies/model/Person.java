@@ -21,8 +21,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "celebrities")
-public class Celebrity {
+@Table(name = "persons")
+public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,6 +40,6 @@ public class Celebrity {
     @Column(length = 50)
     private Role role;
 
-    @ManyToMany(mappedBy = "celebrities")
+    @ManyToMany(mappedBy = "persons")
     private Set<Movie> movies = new HashSet<>();
 }

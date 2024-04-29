@@ -3,16 +3,16 @@ package pt.isec.pdmovies.pdmovies.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import pt.isec.pdmovies.pdmovies.converter.CelebrityConverter;
+import pt.isec.pdmovies.pdmovies.converter.PersonConverter;
 import pt.isec.pdmovies.pdmovies.converter.MovieConverter;
-import pt.isec.pdmovies.pdmovies.dto.CelebrityDto;
-import pt.isec.pdmovies.pdmovies.dto.CelebritySaveDto;
+import pt.isec.pdmovies.pdmovies.dto.PersonDto;
+import pt.isec.pdmovies.pdmovies.dto.PersonSaveDto;
 import pt.isec.pdmovies.pdmovies.dto.MovieDto;
 import pt.isec.pdmovies.pdmovies.dto.MovieSaveDto;
 import pt.isec.pdmovies.pdmovies.enums.Role;
-import pt.isec.pdmovies.pdmovies.model.Celebrity;
+import pt.isec.pdmovies.pdmovies.model.Person;
 import pt.isec.pdmovies.pdmovies.model.Movie;
-import pt.isec.pdmovies.pdmovies.repository.CelebrityRepository;
+import pt.isec.pdmovies.pdmovies.repository.PersonRepository;
 import pt.isec.pdmovies.pdmovies.repository.MovieRepository;
 
 import java.util.List;
@@ -27,12 +27,12 @@ import static java.util.Collections.singletonList;
 public class MovieService {
 
     private final MovieRepository movieRepository;
-    private final CelebrityRepository celebrityRepository;
+    private final PersonRepository personRepository;
 
     @Transactional
     public MovieDto createMovie(MovieSaveDto movieSaveDto) {
-        List<Celebrity> celebrities = getCelebritiesOrThrow(movieSaveDto.getCelebrities());
-        Movie movie = MovieConverter.movieSaveDtoToMovie(movieSaveDto, celebrities);
+        List<Person> persons = getPersonsOrThrow(movieSaveDto.getPersons());
+        Movie movie = MovieConverter.movieSaveDtoToMovie(movieSaveDto, persons);
         movie = movieRepository.save(movie);
         return MovieConverter.movieToMovieDto(movie);
     }
@@ -55,8 +55,9 @@ public class MovieService {
     public MovieDto updateMovie(UUID id, MovieSaveDto movieSaveDto) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
-        List<Celebrity> celebrities = getCelebritiesOrThrow(movieSaveDto.getCelebrities());
-        movie = MovieConverter.movieSaveDtoToMovie(movieSaveDto, celebrities);
+        List<Person> persons = getPersonsOrThrow(movieSaveDto.getPersons());
+        movie = MovieConverter.movieSaveDtoToMovie(movieSaveDto, persons);
+        movie.setId(id);
         movie = movieRepository.save(movie);
         return MovieConverter.movieToMovieDto(movie);
     }
@@ -69,45 +70,45 @@ public class MovieService {
     }
 
     @Transactional
-    public MovieDto getMovieWithFilteredCelebrities(UUID movieId, Role role) {
+    public MovieDto getMovieWithFilteredPersons(UUID movieId, Role role) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new IllegalArgumentException("Movie not found"));
 
-        Set<Celebrity> celebrities =
+        Set<Person> persons =
                 role == null
-                        ? movie.getCelebrities()
-                        : movie.getCelebrities().stream()
-                        .filter(celebrity -> celebrity.getRole() != null && celebrity.getRole().equals(role))
+                        ? movie.getPersons()
+                        : movie.getPersons().stream()
+                        .filter(person -> person.getRole() != null && person.getRole().equals(role))
                         .collect(Collectors.toSet());
-        Set<CelebrityDto> celebrityDtos = celebrities.stream()
-                .map(CelebrityConverter::celebrityToCelebrityDto)
+        Set<PersonDto> personDtos = persons.stream()
+                .map(PersonConverter::personToPersonDto)
                 .collect(Collectors.toSet());
 
         MovieDto dto = MovieConverter.movieToMovieDto(movie);
-        dto.getCelebrities().retainAll(celebrityDtos);
+        dto.getPersons().retainAll(personDtos);
         return dto;
     }
 
     @Transactional
-    public MovieDto addCelebritiesToMovie(UUID movieId, List<CelebritySaveDto> celebrityDtos) {
+    public MovieDto addPersonsToMovie(UUID movieId, List<PersonSaveDto> personDtos) {
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
 
-        Set<Celebrity> celebrities = celebrityDtos.stream()
-                .map(dto -> CelebrityConverter.celebritySaveDtoToCelebrity(dto, singletonList(movie)))
+        Set<Person> persons = personDtos.stream()
+                .map(dto -> PersonConverter.personSaveDtoToPerson(dto, singletonList(movie)))
                 .collect(Collectors.toSet());
 
-        movie.getCelebrities().addAll(celebrities);
+        movie.getPersons().addAll(persons);
 
         Movie updatedMovie = movieRepository.save(movie);
         return MovieConverter.movieToMovieDto(updatedMovie);
     }
 
-    private List<Celebrity> getCelebritiesOrThrow(Set<UUID> celebrityIds) {
-        List<Celebrity> celebrities = celebrityRepository.findAllById(celebrityIds);
-        if (celebrityIds.size() > celebrities.size()) {
+    private List<Person> getPersonsOrThrow(Set<UUID> personIds) {
+        List<Person> persons = personRepository.findAllById(personIds);
+        if (personIds.size() > persons.size()) {
             throw new IllegalArgumentException("Celebs not found");
         }
-        return celebrities;
+        return persons;
     }
 }

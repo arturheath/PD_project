@@ -3,12 +3,12 @@ CREATE TABLE movies
     id          UUID PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,
     year        INTEGER,
-    description VARCHAR(255),
+    description VARCHAR(2550),
     banner      VARCHAR(255),
     category VARCHAR(100)
 );
 
-CREATE TABLE celebrities
+CREATE TABLE persons
 (
     id         UUID PRIMARY KEY,
     first_name VARCHAR(255) NOT NULL,
@@ -18,11 +18,11 @@ CREATE TABLE celebrities
     birthday   DATE
 );
 
-CREATE TABLE movie_celebrity
+CREATE TABLE movie_person
 (
-    celebrity_id UUID,
+    person_id UUID,
     movie_id     UUID,
-    PRIMARY KEY (celebrity_id, movie_id),
-    FOREIGN KEY (celebrity_id) REFERENCES celebrities (id),
+    PRIMARY KEY (person_id, movie_id),
+    FOREIGN KEY (person_id) REFERENCES persons (id),
     FOREIGN KEY (movie_id) REFERENCES movies (id)
 );

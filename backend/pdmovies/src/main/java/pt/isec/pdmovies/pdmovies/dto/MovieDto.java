@@ -23,5 +23,5 @@ public class MovieDto {
     String description;
     String banner;
     Category category;
-    Set<CelebrityDto> celebrities = new HashSet<>();
+    Set<PersonDto> persons = new HashSet<>();
 }

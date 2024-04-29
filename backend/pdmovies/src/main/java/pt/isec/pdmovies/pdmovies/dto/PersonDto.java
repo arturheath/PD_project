@@ -1,7 +1,7 @@
 package pt.isec.pdmovies.pdmovies.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,11 +16,13 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CelebritySaveDto {
-    private String firstName;
-    private String lastName;
-    private String photo;
-    private Date birthday;
-    private Role role;
-    private Set<UUID> movies = new HashSet<>();
+@EqualsAndHashCode(of = "id")
+public class PersonDto {
+    UUID id;
+    String firstName;
+    String lastName;
+    String photo;
+    Date birthday;
+    Role role;
+    Set<MovieDto> movies = new HashSet<>();
 }

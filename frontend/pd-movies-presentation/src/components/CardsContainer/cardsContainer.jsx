@@ -10,8 +10,9 @@ import {
     AlertDialogTrigger
 } from "../ui/alert-dialog.jsx";
 import React from "react";
+import {API_URL} from "../../config.js";
 
-const CardsContainer = ({movies, onMovieClick}) => {
+const CardsContainer = ({movies, onMovieClick, setMovies}) => {
 
     const renderAlertDialog = (id) => {
         return (
@@ -27,9 +28,19 @@ const CardsContainer = ({movies, onMovieClick}) => {
             </AlertDialog>
         );
     }
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         console.log("deleting movie", id)
-        // DELETE /movies/:id
+
+        const response = await fetch(`${API_URL}/movies/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('HTTP error, status = ' + response.status)
+        } else {
+            console.log(`Movie with id ${id} deleted successfully`)
+            setMovies(movies.filter(movie => movie.id !== id))
+        }
     }
 
 
@@ -39,7 +50,7 @@ const CardsContainer = ({movies, onMovieClick}) => {
                 movies.map(movie => (
                     <Card className='m-2 bg-gray-200 cursor-pointer' onClick={() => onMovieClick(movie.id)}>
                         <CardHeader>
-                            <CardTitle>{movie.title}</CardTitle>
+                            <CardTitle>{movie.name}</CardTitle>
                             <CardDescription>{movie.year}</CardDescription>
                         </CardHeader>
                         <CardFooter>

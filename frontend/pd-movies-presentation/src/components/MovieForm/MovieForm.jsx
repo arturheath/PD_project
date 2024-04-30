@@ -7,7 +7,7 @@ import {Form, FormControl, FormField, FormItem, FormLabel} from "../ui/form.jsx"
 import {Input} from "../ui/input.jsx";
 import {Button} from "../ui/button.jsx";
 import {Textarea} from "../ui/textarea.jsx";
-import genres from "../../mockedData/genres.js";
+import categories from "../../mockedData/categories.js";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select.jsx";
 
 const formSchema = z.object({
@@ -21,14 +21,16 @@ const formSchema = z.object({
 
 const MovieForm = ({movieInfo}) => {
 
+    console.log("movieInfo", movieInfo)
+
     const form = useForm({
         resolver: zodResolver(formSchema),
         mode: "onSubmit",
         defaultValues: {
-            title: movieInfo?.title || "",
+            title: movieInfo?.name || "",
             year: movieInfo?.year || "",
             description: movieInfo?.description || "",
-            genre: movieInfo?.genre.id || null,
+            category: movieInfo?.category || "",
         }
     });
 
@@ -83,11 +85,11 @@ const MovieForm = ({movieInfo}) => {
                             >
                                 <SelectTrigger>
                                     <SelectValue>
-                                        {genres.find(genre => genre.id === Number(field.value))?.name || "Select a genre"}
+                                        {categories.find(genre => genre.id === Number(field.value))?.name || "Select a genre"}
                                     </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {genres.map(genre => (
+                                    {categories.map(genre => (
                                         <SelectItem key={genre.id} value={genre.id}>{genre.name}</SelectItem>
                                     ))}
                                 </SelectContent>

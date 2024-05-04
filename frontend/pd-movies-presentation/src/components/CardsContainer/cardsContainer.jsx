@@ -48,7 +48,8 @@ const CardsContainer = ({movies, onMovieClick, setMovies}) => {
         <ScrollArea className="h-screen rounded-md border p-4">
             {
                 movies.map(movie => (
-                    <Card className='m-2 bg-gray-200 cursor-pointer' onClick={() => onMovieClick(movie.id)}>
+                    <Card key={movie.id} className='m-2 bg-gray-200 cursor-pointer'
+                          onClick={() => onMovieClick(movie.id)}>
                         <CardHeader>
                             <CardTitle>{movie.name}</CardTitle>
                             <CardDescription>{movie.year}</CardDescription>

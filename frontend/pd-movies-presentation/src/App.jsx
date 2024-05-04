@@ -8,21 +8,22 @@ function App() {
 
     const [selectedMovie, setSelectedMovie] = useState(null)
     const [movies, setMovies] = useState([])
+    const [key, setKey] = useState(0)
 
     useEffect(() => {
-        console.log("requesting list of movies")
         fetch(`${API_URL}/movies`)
             .then(response => response.json())
             .then(data => setMovies(data))
             .catch(error => console.error('ERROR', error));
-
-        console.log("Movies from DB", movies)
     }, [])
-
-    console.log("selectedMovie", selectedMovie)
 
     const handleMovieSelection = (id) => {
         setSelectedMovie(id)
+    }
+
+    const handleMovieUpdate = (updateMovie) => {
+        setMovies(movies.map(movie => movie.id === updateMovie.id ? updateMovie : movie));
+        setKey(prevKey => prevKey + 1)
     }
 
     return (
@@ -34,7 +35,7 @@ function App() {
                                     setMovies={setMovies}/>
                 </div>
                 <div className='w-3/4'>
-                    <MovieInfo id={selectedMovie}/>
+                    <MovieInfo key={key} id={selectedMovie} onMovieUpdate={handleMovieUpdate}/>
                 </div>
             </div>
         </>

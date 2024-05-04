@@ -9,34 +9,55 @@ import {Button} from "../ui/button.jsx";
 import {Textarea} from "../ui/textarea.jsx";
 import categories from "../../mockedData/categories.js";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select.jsx";
+import {API_URL} from "../../config.js";
 
 const formSchema = z.object({
-    title: z.string(),
-    year: z.string().refine(value => {
-        return /^\d{4}$/.test(value);
-    }, {message: "Year must be 4 digits"}),
+    name: z.string(),
+    year: z.string().refine(value => value.length === 4),
     description: z.string(),
-    genre: z.string(),
+    category: z.string(),
+    banner: z.string(),
 });
 
-const MovieForm = ({movieInfo}) => {
+const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
 
-    console.log("movieInfo", movieInfo)
+    console.log("movieInfo year", movieInfo.year);
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         mode: "onSubmit",
         defaultValues: {
-            title: movieInfo?.name || "",
-            year: movieInfo?.year || "",
+            name: movieInfo?.name || "",
+            year: movieInfo?.year.toString() || "",
             description: movieInfo?.description || "",
             category: movieInfo?.category || "",
+            banner: movieInfo?.banner || "",
         }
     });
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
         console.log("sending data to edit movie id: " + movieInfo.id);
         console.log("data", data);
+        try {
+            const response = await fetch(`${API_URL}/movies/${movieInfo.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                console.log("Movie updated successfully");
+                const updatedMovie = await response.json();
+                onMovieUpdate(updatedMovie);
+                setShowForm(false);
+            } else {
+                console.error("Movie update failed");
+            }
+        } catch (error) {
+            console.error("ERROR", error);
+        }
     }
 
     return (
@@ -44,10 +65,10 @@ const MovieForm = ({movieInfo}) => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField
                     control={form.control}
-                    name="title"
+                    name="name"
                     render={({field}) => (
                         <FormItem>
-                            <FormLabel>Title</FormLabel>
+                            <FormLabel>Name</FormLabel>
                             <FormControl>
                                 <Input {...field} />
                             </FormControl>
@@ -66,6 +87,7 @@ const MovieForm = ({movieInfo}) => {
                         </FormItem>
                     )}
                 />
+
                 <FormField control={form.control} name="description" render={({field}) => (
                     <FormItem>
                         <FormLabel>Description</FormLabel>
@@ -75,22 +97,35 @@ const MovieForm = ({movieInfo}) => {
                     </FormItem>
                 )}/>
 
-                <FormField control={form.control} name="genre" render={({field}) => (
+                <FormField
+                    control={form.control}
+                    name="banner"
+                    render={({field}) => (
+                        <FormItem>
+                            <FormLabel>Banner URL</FormLabel>
+                            <FormControl>
+                                <Input {...field} />
+                            </FormControl>
+                        </FormItem>
+                    )}
+                />
+
+                <FormField control={form.control} name="category" render={({field}) => (
                     <FormItem>
-                        <FormLabel>Genre</FormLabel>
+                        <FormLabel>Category</FormLabel>
                         <FormControl>
                             <Select onValueChange={value => {
-                                field.onChange(value); // This ensures React Hook Form updates with the new value
+                                field.onChange(value);
                             }} value={field.value}
                             >
                                 <SelectTrigger>
                                     <SelectValue>
-                                        {categories.find(genre => genre.id === Number(field.value))?.name || "Select a genre"}
+                                        {field.value || "Select a category"}
                                     </SelectValue>
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {categories.map(genre => (
-                                        <SelectItem key={genre.id} value={genre.id}>{genre.name}</SelectItem>
+                                    {categories.map(category => (
+                                        <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
@@ -98,7 +133,10 @@ const MovieForm = ({movieInfo}) => {
                     </FormItem>
                 )}
                 />
-                <Button type="submit">Submit</Button>
+                <div>
+                    <Button className="m-2" variant="destructive" onClick={() => setShowForm(false)}>Cancel</Button>
+                    <Button className="m-2" type="submit">Submit</Button>
+                </div>
             </form>
         </Form>
 

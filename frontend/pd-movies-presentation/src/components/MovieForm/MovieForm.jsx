@@ -44,7 +44,7 @@ const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({...data, persons: movieInfo.persons.map(person => person.id)})
             });
 
             if (response.ok) {

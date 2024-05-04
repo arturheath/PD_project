@@ -2,9 +2,9 @@ import React, {useEffect, useState} from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card.jsx";
 import {Badge} from "../ui/badge.jsx";
 import {Dialog, DialogContent, DialogTrigger} from "../ui/dialog.jsx";
-import PersonsModal from "../PersonsModal/PersonsModal.jsx";
 import MovieForm from "../MovieForm/MovieForm.jsx";
 import {API_URL} from "../../config.js";
+import defaultProfileIcon from "../../assets/defaultProfileIcon.png";
 
 const style = "text-center bg-blue-500 text-white px-2 py-1 rounded inline-flex items-center";
 
@@ -29,6 +29,17 @@ const MovieInfo = ({id, onMovieUpdate}) => {
         }
     }
 
+    const calculateAge = (birthday) => {
+        const birthDate = new Date(birthday);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
     return (
         <>
             {
@@ -42,25 +53,22 @@ const MovieInfo = ({id, onMovieUpdate}) => {
                                 className='text-center px-2 py-1 rounded inline-flex items-center'>{movieInfo.category}</Badge>
                         </div>
                         <p className='p-1'>{movieInfo.description}</p>
-                        <div className='flex justify-center space-x-4'>
-                            <Dialog>
-                                <DialogTrigger className={style}>Directors </DialogTrigger>
-                                <DialogContent>
-                                    <PersonsModal id={movieInfo.id} role='director'/>
-                                </DialogContent>
-                            </Dialog>
-                            <Dialog>
-                                <DialogTrigger className={style}>Producers</DialogTrigger>
-                                <DialogContent>
-                                    <PersonsModal id={movieInfo.id} role='producer'/>
-                                </DialogContent>
-                            </Dialog>
-                            <Dialog>
-                                <DialogTrigger className={style}>Cast</DialogTrigger>
-                                <DialogContent>
-                                    <PersonsModal id={movieInfo.id} role='cast'/>
-                                </DialogContent>
-                            </Dialog>
+                        <div className='flex justify-center space-x-4 border-2 p-6'>
+                            {
+                                movieInfo.persons && movieInfo.persons.map(person => (
+                                    <div key={person.id} className='flex flex-col items-center'>
+                                        <img className="w-12 h-12 rounded-full object-cover"
+                                             src={person.photo ? person.photo : defaultProfileIcon}
+                                             alt="people"/>
+                                        <div>{person.firstName} {person.lastName}</div>
+                                        <div>{person.role.charAt(0).toUpperCase() + person.role.slice(1).toLowerCase()}</div>
+                                        <div className="text-xs">{calculateAge(person.birthday)} years old</div>
+                                    </div>
+                                ))
+                            }
+                            <div
+                                className="w-12 h-12 rounded-full object-cover bg-gray-400 flex items-center justify-center text-xl">+
+                            </div>
                         </div>
                         <div className='p-10 flex justify-center space-x-4'>
                             <Dialog open={showForm}>
@@ -79,7 +87,8 @@ const MovieInfo = ({id, onMovieUpdate}) => {
                 </Card>
             }
         </>
-    );
+    )
+        ;
 }
 
 export default MovieInfo;

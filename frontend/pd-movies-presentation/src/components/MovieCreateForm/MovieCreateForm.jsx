@@ -22,7 +22,7 @@ const formSchema = z.object({
     persons: z.array(z.string()),
 });
 
-const MovieCreateForm = ({setShowForm, onMovieCreate}) => {
+const MovieCreateForm = ({setShowForm, onMovieCreate, setSelectedMovie}) => {
 
     const [selectedPersons, setSelectedPersons] = useState([]);
     const [personOptions, setPersonOptions] = useState([]);
@@ -73,6 +73,7 @@ const MovieCreateForm = ({setShowForm, onMovieCreate}) => {
                 const newMovie = await response.json();
                 onMovieCreate(newMovie);
                 setShowForm(false);
+                setSelectedMovie(newMovie.id);
             } else {
                 console.error("Movie creation failed");
             }

@@ -49,7 +49,7 @@ function App() {
                 </DialogTrigger>
                 <DialogContent>
                     {showCreateForm &&
-                        <MovieCreateForm setShowForm={setShowCreateForm} onMovieCreate={handleMovieCreate}/>}
+                        <MovieCreateForm setShowForm={setShowCreateForm} onMovieCreate={handleMovieCreate} setSelectedMovie={setSelectedMovie}/>}
                 </DialogContent>
             </Dialog>
             <div className='flex flex-wrap'>

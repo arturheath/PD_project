@@ -19,41 +19,39 @@ const formSchema = z.object({
     banner: z.string(),
 });
 
-const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
-
-    console.log("movieInfo year", movieInfo.year);
+const MovieCreateForm = ({setShowForm, onMovieCreate}) => {
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         mode: "onSubmit",
         defaultValues: {
-            name: movieInfo?.name || "",
-            year: movieInfo?.year.toString() || "",
-            description: movieInfo?.description || "",
-            category: movieInfo?.category || "",
-            banner: movieInfo?.banner || "",
+            name: "",
+            year: "",
+            description: "",
+            category: "",
+            banner: "",
         }
     });
 
     const onSubmit = async (data) => {
-        console.log("sending data to edit movie id: " + movieInfo.id);
+        console.log("sending data to create movie");
         console.log("data", data);
         try {
-            const response = await fetch(`${API_URL}/movies/${movieInfo.id}`, {
-                method: 'PUT',
+            const response = await fetch(`${API_URL}/movies`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({...data, persons: movieInfo.persons.map(person => person.id)})
+                body: JSON.stringify({...data, persons: []})
             });
 
             if (response.ok) {
-                console.log("Movie updated successfully");
-                const updatedMovie = await response.json();
-                onMovieUpdate(updatedMovie);
+                console.log("Movie created successfully");
+                const newMovie = await response.json();
+                onMovieCreate(newMovie);
                 setShowForm(false);
             } else {
-                console.error("Movie update failed");
+                console.error("Movie creation failed");
             }
         } catch (error) {
             console.error("ERROR", error);
@@ -143,4 +141,4 @@ const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
     );
 }
 
-export default MovieForm;
+export default MovieCreateForm;

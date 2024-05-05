@@ -66,9 +66,6 @@ const MovieInfo = ({id, onMovieUpdate}) => {
                                     </div>
                                 ))
                             }
-                            <div
-                                className="w-12 h-12 rounded-full object-cover bg-gray-400 flex items-center justify-center text-xl">+
-                            </div>
                         </div>
                         <div className='p-10 flex justify-center space-x-4'>
                             <Dialog open={showForm}>

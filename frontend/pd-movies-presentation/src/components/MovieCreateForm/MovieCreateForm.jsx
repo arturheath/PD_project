@@ -1,5 +1,6 @@
 "use client";
 
+import {useEffect, useState} from "react";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useForm} from "react-hook-form";
 import {z} from 'zod';
@@ -10,6 +11,7 @@ import {Textarea} from "../ui/textarea.jsx";
 import categories from "../../mockedData/categories.js";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select.jsx";
 import {API_URL} from "../../config.js";
+import MultiSelect from 'react-select'
 
 const formSchema = z.object({
     name: z.string(),
@@ -17,9 +19,25 @@ const formSchema = z.object({
     description: z.string(),
     category: z.string(),
     banner: z.string(),
+    persons: z.array(z.string()),
 });
 
 const MovieCreateForm = ({setShowForm, onMovieCreate}) => {
+
+    const [selectedPersons, setSelectedPersons] = useState([]);
+    const [personOptions, setPersonOptions] = useState([]);
+
+    useEffect(() => {
+        fetch(`${API_URL}/people`)
+            .then(response => response.json())
+            .then(data => {
+                const options = data.map(person => ({
+                    value: person.id, label: person.firstName + " " + person.lastName
+                }));
+                setPersonOptions(options);
+            })
+            .catch(error => console.error('ERROR', error));
+    }, []);
 
     const form = useForm({
         resolver: zodResolver(formSchema),
@@ -30,19 +48,24 @@ const MovieCreateForm = ({setShowForm, onMovieCreate}) => {
             description: "",
             category: "",
             banner: "",
+            persons: [],
         }
     });
 
     const onSubmit = async (data) => {
         console.log("sending data to create movie");
-        console.log("data", data);
+
+
+        const dataWithPersons = {...data, persons: selectedPersons.map(person => person.value)};
+        console.log("data", dataWithPersons);
+
         try {
             const response = await fetch(`${API_URL}/movies`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({...data, persons: []})
+                body: JSON.stringify(dataWithPersons)
             });
 
             if (response.ok) {
@@ -108,6 +131,18 @@ const MovieCreateForm = ({setShowForm, onMovieCreate}) => {
                     )}
                 />
 
+                <FormItem>
+                    <FormLabel>Persons</FormLabel>
+                    <FormControl>
+                        <MultiSelect
+                            isMulti
+                            value={selectedPersons}
+                            options={personOptions}
+                            onChange={setSelectedPersons}
+                        ></MultiSelect>
+                    </FormControl>
+                </FormItem>
+
                 <FormField control={form.control} name="category" render={({field}) => (
                     <FormItem>
                         <FormLabel>Category</FormLabel>
@@ -123,7 +158,8 @@ const MovieCreateForm = ({setShowForm, onMovieCreate}) => {
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map(category => (
-                                        <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>
+                                        <SelectItem key={category.id}
+                                                    value={category.name}>{category.name}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>

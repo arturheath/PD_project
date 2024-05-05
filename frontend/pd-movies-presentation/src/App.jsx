@@ -56,7 +56,9 @@ function App() {
                 <div className='w-1/4'>
                     <CardsContainer movies={movies}
                                     onMovieClick={handleMovieSelection}
-                                    setMovies={setMovies}/>
+                                    setMovies={setMovies}
+                                    setSelectedMovie={setSelectedMovie}
+                    />
                 </div>
                 <div className='w-3/4'>
                     <MovieInfo key={key} id={selectedMovie} onMovieUpdate={handleMovieUpdate}/>

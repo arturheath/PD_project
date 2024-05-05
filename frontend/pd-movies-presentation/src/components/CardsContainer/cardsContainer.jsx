@@ -12,7 +12,7 @@ import {
 import React from "react";
 import {API_URL} from "../../config.js";
 
-const CardsContainer = ({movies, onMovieClick, setMovies}) => {
+const CardsContainer = ({movies, onMovieClick, setMovies, setSelectedMovie}) => {
 
     const renderAlertDialog = (id) => {
         return (
@@ -40,6 +40,7 @@ const CardsContainer = ({movies, onMovieClick, setMovies}) => {
         } else {
             console.log(`Movie with id ${id} deleted successfully`)
             setMovies(movies.filter(movie => movie.id !== id))
+            setSelectedMovie(null)
         }
     }
 

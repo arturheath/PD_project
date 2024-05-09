@@ -11,7 +11,7 @@ import {Textarea} from "../ui/textarea.jsx";
 import categories from "../../mockedData/categories.js";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select.jsx";
 import {API_URL} from "../../config.js";
-import MultiSelect from "react-select";
+import MultiSelect from 'react-select'
 
 const formSchema = z.object({
     name: z.string(),
@@ -22,7 +22,7 @@ const formSchema = z.object({
     persons: z.array(z.string()),
 });
 
-const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
+const MovieCreateForm = ({setShowForm, onMovieCreate, setSelectedMovie}) => {
 
     const [selectedPersons, setSelectedPersons] = useState([]);
     const [personOptions, setPersonOptions] = useState([]);
@@ -35,12 +35,6 @@ const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
                     value: person.id, label: person.firstName + " " + person.lastName
                 }));
                 setPersonOptions(options);
-
-                // Set selected persons
-                const selected = movieInfo?.persons.map(person => ({
-                    value: person.id, label: person.firstName + " " + person.lastName
-                })) || [];
-                setSelectedPersons(selected);
             })
             .catch(error => console.error('ERROR', error));
     }, []);
@@ -49,24 +43,25 @@ const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
         resolver: zodResolver(formSchema),
         mode: "onSubmit",
         defaultValues: {
-            name: movieInfo?.name || "",
-            year: movieInfo?.year.toString() || "",
-            description: movieInfo?.description || "",
-            category: movieInfo?.category || "",
-            banner: movieInfo?.banner || "",
-            persons: movieInfo?.persons.map(person => person.id) || [],
+            name: "",
+            year: "",
+            description: "",
+            category: "",
+            banner: "",
+            persons: [],
         }
     });
 
     const onSubmit = async (data) => {
-        console.log("sending data to edit movie id: " + movieInfo.id);
+        console.log("sending data to create movie");
+
 
         const dataWithPersons = {...data, persons: selectedPersons.map(person => person.value)};
         console.log("data", dataWithPersons);
 
         try {
-            const response = await fetch(`${API_URL}/movies/${movieInfo.id}`, {
-                method: 'PUT',
+            const response = await fetch(`${API_URL}/movies`, {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -74,12 +69,13 @@ const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
             });
 
             if (response.ok) {
-                console.log("Movie updated successfully");
-                const updatedMovie = await response.json();
-                onMovieUpdate(updatedMovie);
+                console.log("Movie created successfully");
+                const newMovie = await response.json();
+                onMovieCreate(newMovie);
                 setShowForm(false);
+                setSelectedMovie(newMovie.id);
             } else {
-                console.error("Movie update failed");
+                console.error("Movie creation failed");
             }
         } catch (error) {
             console.error("ERROR", error);
@@ -163,7 +159,8 @@ const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map(category => (
-                                        <SelectItem key={category.id} value={category.name}>{category.name}</SelectItem>
+                                        <SelectItem key={category.id}
+                                                    value={category.name}>{category.name}</SelectItem>
                                     ))}
                                 </SelectContent>
                             </Select>
@@ -181,4 +178,4 @@ const MovieForm = ({movieInfo, setShowForm, onMovieUpdate}) => {
     );
 }
 
-export default MovieForm;
+export default MovieCreateForm;

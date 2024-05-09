@@ -2,42 +2,42 @@ import React, {useEffect, useState} from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "../ui/card.jsx";
 import {Badge} from "../ui/badge.jsx";
 import {Dialog, DialogContent, DialogTrigger} from "../ui/dialog.jsx";
-import PersonsModal from "../PersonsModal/PersonsModal.jsx";
 import MovieForm from "../MovieForm/MovieForm.jsx";
 import {API_URL} from "../../config.js";
-
-/*const movieInfo = {
-    id: 1,
-    title: 'The Godfather',
-    year: '1972',
-    genre: {
-        id: 2,
-        name: "Crime"
-    },
-    description: 'Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.',
-    poster: 'https://image.tmdb.org/t/p/w600_and_h900_bestv2/oJagOzBu9Rdd9BrciseCm3U3MCU.jpg',
-}*/
+import defaultProfileIcon from "../../assets/defaultProfileIcon.png";
 
 const style = "text-center bg-blue-500 text-white px-2 py-1 rounded inline-flex items-center";
 
-const MovieInfo = ({id}) => {
+const MovieInfo = ({id, onMovieUpdate}) => {
 
     const [showForm, setShowForm] = useState(false);
     const [movieInfo, setMovieInfo] = useState({});
 
     useEffect(() => {
-        console.log("requesting movie details id: ", id)
-        fetch(`${API_URL}/movies/${id}`)
-            .then(response => response.json())
-            .then(data => setMovieInfo(data))
-            .catch(error => console.error('ERROR', error));
+        if (id) {
+            console.log("requesting movie details id: ", id)
+            fetch(`${API_URL}/movies/${id}`)
+                .then(response => response.json())
+                .then(data => setMovieInfo(data))
+                .catch(error => console.error('ERROR', error));
+        }
     }, [id]);
 
-    console.log("id para fazer pedido de detalhes", id)
-
-
     function handleModal() {
-        setShowForm(!showForm);
+        if (!showForm) {
+            setShowForm(true);
+        }
+    }
+
+    const calculateAge = (birthday) => {
+        const birthDate = new Date(birthday);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
     }
 
     return (
@@ -53,32 +53,27 @@ const MovieInfo = ({id}) => {
                                 className='text-center px-2 py-1 rounded inline-flex items-center'>{movieInfo.category}</Badge>
                         </div>
                         <p className='p-1'>{movieInfo.description}</p>
-                        <div className='flex justify-center space-x-4'>
-                            <Dialog>
-                                <DialogTrigger className={style}>Directors </DialogTrigger>
-                                <DialogContent>
-                                    <PersonsModal id={movieInfo.id} role='director'/>
-                                </DialogContent>
-                            </Dialog>
-                            <Dialog>
-                                <DialogTrigger className={style}>Producers</DialogTrigger>
-                                <DialogContent>
-                                    <PersonsModal id={movieInfo.id} role='producer'/>
-                                </DialogContent>
-                            </Dialog>
-                            <Dialog>
-                                <DialogTrigger className={style}>Cast</DialogTrigger>
-                                <DialogContent>
-                                    <PersonsModal id={movieInfo.id} role='cast'/>
-                                </DialogContent>
-                            </Dialog>
+                        <div className='flex justify-center space-x-4 border-2 p-6'>
+                            {
+                                movieInfo.persons && movieInfo.persons.map(person => (
+                                    <div key={person.id} className='flex flex-col items-center'>
+                                        <img className="w-12 h-12 rounded-full object-cover"
+                                             src={person.photo ? person.photo : defaultProfileIcon}
+                                             alt="people"/>
+                                        <div>{person.firstName} {person.lastName}</div>
+                                        <div>{person.role.charAt(0).toUpperCase() + person.role.slice(1).toLowerCase()}</div>
+                                        <div className="text-xs">{calculateAge(person.birthday)} years old</div>
+                                    </div>
+                                ))
+                            }
                         </div>
                         <div className='p-10 flex justify-center space-x-4'>
-                            <Dialog>
+                            <Dialog open={showForm}>
                                 <DialogTrigger className='bg-blue-500 text-white px-2 py-1 rounded'
                                                onClick={handleModal}>Edit Movie</DialogTrigger>
                                 <DialogContent>
-                                    {showForm && <MovieForm movieInfo={movieInfo}/>}
+                                    {showForm && <MovieForm movieInfo={movieInfo} setShowForm={setShowForm}
+                                                            onMovieUpdate={onMovieUpdate}/>}
                                 </DialogContent>
                             </Dialog>
                         </div>
@@ -88,11 +83,9 @@ const MovieInfo = ({id}) => {
                     </CardContent>
                 </Card>
             }
-            {
-                showForm && <MovieForm/>
-            }
         </>
-    );
+    )
+        ;
 }
 
 export default MovieInfo;

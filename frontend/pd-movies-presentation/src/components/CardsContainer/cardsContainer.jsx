@@ -12,7 +12,7 @@ import {
 import React from "react";
 import {API_URL} from "../../config.js";
 
-const CardsContainer = ({movies, onMovieClick, setMovies}) => {
+const CardsContainer = ({movies, onMovieClick, setMovies, setSelectedMovie}) => {
 
     const renderAlertDialog = (id) => {
         return (
@@ -40,6 +40,7 @@ const CardsContainer = ({movies, onMovieClick, setMovies}) => {
         } else {
             console.log(`Movie with id ${id} deleted successfully`)
             setMovies(movies.filter(movie => movie.id !== id))
+            setSelectedMovie(null)
         }
     }
 
@@ -48,7 +49,8 @@ const CardsContainer = ({movies, onMovieClick, setMovies}) => {
         <ScrollArea className="h-screen rounded-md border p-4">
             {
                 movies.map(movie => (
-                    <Card className='m-2 bg-gray-200 cursor-pointer' onClick={() => onMovieClick(movie.id)}>
+                    <Card key={movie.id} className='m-2 bg-gray-200 cursor-pointer'
+                          onClick={() => onMovieClick(movie.id)}>
                         <CardHeader>
                             <CardTitle>{movie.name}</CardTitle>
                             <CardDescription>{movie.year}</CardDescription>

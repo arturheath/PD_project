@@ -6,8 +6,9 @@ pipeline {
             steps {
                 echo 'Building backend...'
                 script {
-                    // Assumes Maven is installed on the Jenkins agent
+                    dir('backend/pdmovies') {
                     sh 'mvn clean install -DskipTests' // Builds the project and skips the tests
+                    }
                 }
             }
         }
@@ -15,8 +16,9 @@ pipeline {
             steps {
                 echo 'Testing backend...'
                 script {
-                    // Runs tests without building the whole project again
+                    dir('backend/pdmovies') {
                     sh 'mvn test'
+                    }
                 }
             }
         }

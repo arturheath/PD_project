@@ -15,13 +15,13 @@ services:
       - "5432:5432"
 
   backend:
-  build:
-    context: .  # Current directory where Dockerfile is located
-    dockerfile: Dockerfile
-  ports:
-    - "8080:8080"
-  depends_on:
-    - postgres
+    build:
+      context: .  # Current directory where Dockerfile is located
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:

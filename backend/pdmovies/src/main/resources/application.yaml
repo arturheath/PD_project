@@ -4,7 +4,7 @@ spring:
   application:
     name: pdmovies
   datasource:
-    url: jdbc:postgresql://localhost:5432/pdmovies
+    url: jdbc:postgresql://postgres:5432/pdmovies
     username: user
     password: password
   jpa:

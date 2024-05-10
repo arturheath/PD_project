@@ -4,14 +4,16 @@ FROM maven:3.8.4-openjdk-17 as builder
 # Set the working directory in the Maven container
 WORKDIR /pdmovies
 
-# Copy the pom.xml file to download dependencies
+# Copy the pom.xml file and other Maven config files
 COPY pom.xml .
-
 # Optionally, copy the settings.xml if you have any custom Maven settings
 # COPY settings.xml /root/.m2/
 
+# Copy the application resource files (including application.yml)
+COPY src/main/resources/ /pdmovies/src/main/resources/
+
 # Copy the source code
-COPY src src
+COPY src /pdmovies/src
 
 # Build the application and skip tests
 RUN mvn clean install -DskipTests

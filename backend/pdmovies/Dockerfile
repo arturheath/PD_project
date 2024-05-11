@@ -28,7 +28,7 @@ WORKDIR /pdmovies
 COPY --from=builder /pdmovies/target/*.jar pdmovies.jar
 
 # Expose the port on which your app runs
-EXPOSE 8080
+EXPOSE 8081
 
 # Command to run the application
 CMD ["java", "-jar", "pdmovies.jar"]

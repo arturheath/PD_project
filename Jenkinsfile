@@ -33,19 +33,19 @@ pipeline {
                 script {
                     echo  'Building Docker image for Backend'
                     dir('backend/pdmovies') {
-                        sh "docker build -t myusername/mybackend:${IMAGE_TAG} ."
+                        sh "docker build -t arturheath/pdbackend:${IMAGE_TAG} ."
                     }
                     echo 'Building Docker image for Frontend'
                     dir('frontend/pd-movies-presentation') {
-                        sh 'docker build -t myusername/myfrontend:${IMAGE_TAG} .'
+                        sh 'docker build -t arturheath/pdfrontend:${IMAGE_TAG} .'
                     }
                     echo 'Pushing Backend Image'
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        sh "docker push myusername/mybackend:${IMAGE_TAG}"
+                        sh "docker push arturheath/pdbackend:${IMAGE_TAG}"
                     }
                     echo 'Pushing Frontend Image'
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        sh "docker push myusername/myfrontend:${IMAGE_TAG}"
+                        sh "docker push arturheath/pdfrontend:${IMAGE_TAG}"
                     }
                 }
             }

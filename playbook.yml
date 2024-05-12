@@ -1,0 +1,33 @@
+---
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Pull the latest backend image
+      docker_image:
+        name: "arturheath/pdbackend"
+        tag: "latest"
+        source: pull
+
+    - name: Ensure backend container is running
+      docker_container:
+        name: "pdbackend"
+        image: "arturheath/pdbackend:latest"
+        state: started
+        restart_policy: always
+        ports:
+          - "8081:8081"
+
+    - name: Pull the latest frontend image
+      docker_image:
+        name: "arturheath/pdfrontend"
+        tag: "latest"
+        source: pull
+
+    - name: Ensure frontend container is running
+      docker_container:
+        name: "pdfrontend"
+        image: "arturheath/pdfrontend:latest"
+        state: started
+        restart_policy: always
+        ports:
+          - "5000:5000"

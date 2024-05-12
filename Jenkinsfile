@@ -31,19 +31,19 @@ pipeline {
         stage('Dockerize and Push') {
             steps {
                 script {
-                    // Building Docker image for Backend
+                    echo  'Building Docker image for Backend'
                     dir('backend/pdmovies') {
                         sh "docker build -t myusername/mybackend:${IMAGE_TAG} ."
                     }
-                    // Building Docker image for Frontend
+                    echo 'Building Docker image for Frontend'
                     dir('frontend/pd-movies-presentation') {
                         sh 'docker build -t myusername/myfrontend:${IMAGE_TAG} .'
                     }
-                    // Pushing Backend Image
+                    echo 'Pushing Backend Image'
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
                         sh "docker push myusername/mybackend:${IMAGE_TAG}"
                     }
-                    // Pushing Frontend Image
+                    echo 'Pushing Frontend Image'
                     docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
                         sh "docker push myusername/myfrontend:${IMAGE_TAG}"
                     }

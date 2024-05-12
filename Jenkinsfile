@@ -53,14 +53,14 @@ pipeline {
         stage('Deploy with Ansible') {
             steps {
                 script {
-                    // Using Ansible in a Docker container with Docker socket connection
                     sh '''
-                    docker run --rm \
-                        -e DOCKER_HOST=tcp://host.docker.internal:2375 \
-                        -v ${WORKSPACE}:/workspace \
-                        -w /workspace \
-                        ansible/ansible-runner:latest \
+                    docker run --rm \\
+                        -e DOCKER_HOST=tcp://host.docker.internal:2375 \\
+                        -v ${WORKSPACE}:/workspace \\
+                        -w /workspace \\
+                        ansible/ansible-runner:latest \\
                         ansible-playbook -i inventory playbook.yml
+                    '''
                 }
             }
         }

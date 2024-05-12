@@ -50,5 +50,15 @@ pipeline {
                 }
             }
         }
+        stage('Deploy with Ansible') {
+            steps {
+                script {
+                    // Using Ansible in a Docker container
+                    sh '''
+                    docker run --rm -v ${WORKSPACE}:/workspace -v /var/run/docker.sock:/var/run/docker.sock -w /workspace ansible/ansible-runner:latest ansible-playbook -i inventory playbook.yml
+                    '''
+                }
+            }
+        }
     }
 }

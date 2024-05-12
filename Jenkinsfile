@@ -1,15 +1,21 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
+        IMAGE_TAG = "latest"  // Consider using a more unique tag like "${env.BUILD_NUMBER}" in the future
+    }
+
     stages {
         stage('Build') {
             steps {
                 echo 'Building backend...'
                 script {
                     dir('backend/pdmovies') {
-                    sh 'mvn clean install -DskipTests' // Builds the project and skips the tests
+                        sh 'mvn clean install -DskipTests' // Builds the project and skips the tests
                     }
                 }
+                echo 'Building frontend...'
             }
         }
         stage('Test') {
@@ -17,7 +23,29 @@ pipeline {
                 echo 'Testing backend...'
                 script {
                     dir('backend/pdmovies') {
-                    sh 'mvn test'
+                        sh 'mvn test'
+                    }
+                }
+            }
+        }
+        stage('Dockerize and Push') {
+            steps {
+                script {
+                    // Building Docker image for Backend
+                    dir('backend/pdmovies') {
+                        sh "docker build -t myusername/mybackend:${IMAGE_TAG} ."
+                    }
+                    // Building Docker image for Frontend
+                    dir('frontend/pd-movies-presentation') {
+                        sh 'docker build -t myusername/myfrontend:${IMAGE_TAG} .'
+                    }
+                    // Pushing Backend Image
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        sh "docker push myusername/mybackend:${IMAGE_TAG}"
+                    }
+                    // Pushing Frontend Image
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                        sh "docker push myusername/myfrontend:${IMAGE_TAG}"
                     }
                 }
             }

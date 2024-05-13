@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     // Run Ansible playbook
-                    sh "docker exec pd-ansible ansible-playbook -i /ansible/inventory /ansible/playbook.yml"
+                    sh "docker run --name pd-ansible -v /var/run/docker.sock:/var/run/docker.sock -p 9123:80 --rm pd-ansible"
                 }
             }
         }

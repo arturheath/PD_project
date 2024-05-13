@@ -54,12 +54,8 @@ pipeline {
         stage('Deploy with Ansible') {
             steps {
                 script {
-                    // Run Ansible playbook directly
-                    sh 'docker info' // This helps confirm Docker API connectivity
-                    sh '''
-                    export DOCKER_HOST=tcp://host.docker.internal:2375
-                    ansible-playbook -i inventory playbook.yml
-                    '''
+                    // Run Ansible playbook
+                    sh "docker exec pd-ansible ansible-playbook -i /ansible/inventory /ansible/playbook.yml"
                 }
             }
         }

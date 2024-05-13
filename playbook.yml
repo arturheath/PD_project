@@ -2,11 +2,18 @@
 - hosts: localhost
   become: true
   tasks:
+    - name: Get Docker info
+      community.docker.docker_info:
+        docker_host: "tcp://host.docker.internal:2375"
+      register: docker_info 
+  
     - name: Pull the latest backend image
-      docker_image:
+      community.docker.docker_image:
         name: "arturheath/pdbackend"
         tag: "latest"
         source: pull
+        docker_host: "tcp://host.docker.internal:2375"
+        tls: no
 
     - name: Ensure backend container is running
       docker_container:

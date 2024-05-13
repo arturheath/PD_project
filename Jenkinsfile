@@ -54,7 +54,10 @@ pipeline {
             steps {
                 script {
                     // Run Ansible playbook directly
-                    sh 'ansible-playbook -i inventory playbook.yml'
+                    sh '''
+                    export DOCKER_HOST=${DOCKER_HOST}
+                    ansible-playbook -i inventory playbook.yml
+                    '''
                 }
             }
         }

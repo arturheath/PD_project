@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        DOCKER_HOST = "tcp://localhost:2375"
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         IMAGE_TAG = "latest"  // Consider using a more unique tag like "${env.BUILD_NUMBER}" in the future
     }

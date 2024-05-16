@@ -1,9 +1,9 @@
+// eslint-disable-next-line no-unused-vars
 import React, {useEffect, useState} from 'react';
-import './App.css'
 import CardsContainer from "./components/CardsContainer/cardsContainer.jsx";
 import MovieInfo from "./components/MovieContainer/MovieInfo.jsx";
 import {API_URL} from "./config.js";
-import {Dialog, DialogContent, DialogHeader, DialogTrigger} from "./components/ui/dialog.jsx";
+import {Dialog, DialogContent, DialogTrigger} from "./components/ui/dialog.jsx";
 import MovieCreateForm from "./components/MovieCreateForm/MovieCreateForm.jsx";
 
 

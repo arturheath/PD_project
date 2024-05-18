@@ -17,6 +17,12 @@ pipeline {
                     }
                 }
                 echo 'Building frontend...'
+                script {
+                    dir('frontend\pd-movies-presentation') { 
+                        sh 'npm install' 
+                        sh 'npm run build'
+                    }
+                }
             }
         }
         stage('Test') {

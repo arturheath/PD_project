@@ -18,7 +18,7 @@ pipeline {
                 }
                 echo 'Building frontend...'
                 script {
-                    dir('frontend\pd-movies-presentation') { 
+                    dir('frontend/pd-movies-presentation') { 
                         sh 'npm install' 
                         sh 'npm run build'
                     }
@@ -35,7 +35,7 @@ pipeline {
                 }
                 echo 'Testing frontend...'
                 script {
-                    dir('frontend\pd-movies-presentation') {
+                    dir('frontend/pd-movies-presentation') {
                         sh 'npm install'
                         sh 'npm test'
                     }

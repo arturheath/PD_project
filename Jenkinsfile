@@ -27,6 +27,13 @@ pipeline {
                         sh 'mvn test'
                     }
                 }
+                echo 'Testing frontend...'
+                script {
+                    dir('frontend\pd-movies-presentation') {
+                        sh 'npm install'
+                        sh 'npm test'
+                    }
+                }
             }
         }
         stage('Dockerize and Push') {

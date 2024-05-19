@@ -68,7 +68,15 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh "docker run --name pd-ansible -v /var/run/docker.sock:/var/run/docker.sock -p 9123:80 --rm -e docker_username=${env.DOCKER_USERNAME} -e docker_password=${env.DOCKER_PASSWORD} pd-ansible"
+                        // Securely passing environment variables
+                        sh """
+                        docker run --name pd-ansible \
+                          -v /var/run/docker.sock:/var/run/docker.sock \
+                          -p 9123:80 --rm \
+                          -e docker_username=\$DOCKER_USERNAME \
+                          -e docker_password=\$DOCKER_PASSWORD \
+                          pd-ansible
+                        """
                     }
                 }
             }

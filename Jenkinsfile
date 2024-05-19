@@ -35,7 +35,11 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
+        stages {
+        stage('Test Backend') {
+            when {
+                changeset "**/backend/**"
+            }
             steps {
                 echo 'Testing backend...'
                 script {
@@ -43,6 +47,13 @@ pipeline {
                         sh 'mvn test'
                     }
                 }
+            }
+        }
+        stage('Test Frontend') {
+            when {
+                changeset "**/frontend/**"
+            }
+            steps {
                 echo 'Testing frontend...'
                 script {
                     dir('frontend/pd-movies-presentation') {
@@ -52,24 +63,36 @@ pipeline {
                 }
             }
         }
-        stage('Dockerize and Push') {
+        stage('Dockerize and Push Backend') {
+            when {
+                changeset "**/backend/**"
+            }
             steps {
                 script {
-                    echo  'Building Docker image for Backend'
+                    echo 'Building Docker image for Backend'
                     dir('backend/pdmovies') {
                         sh "docker build -t arturheath/pdbackend:${IMAGE_TAG} ."
+                        echo 'Pushing Backend Image'
+                        docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                            sh "docker push arturheath/pdbackend:${IMAGE_TAG}"
+                        }
                     }
+                }
+            }
+        }
+        stage('Dockerize and Push Frontend') {
+            when {
+                changeset "**/frontend/**"
+            }
+            steps {
+                script {
                     echo 'Building Docker image for Frontend'
                     dir('frontend/pd-movies-presentation') {
-                        sh 'docker build -t arturheath/pdfrontend:${IMAGE_TAG} .'
-                    }
-                    echo 'Pushing Backend Image'
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        sh "docker push arturheath/pdbackend:${IMAGE_TAG}"
-                    }
-                    echo 'Pushing Frontend Image'
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
-                        sh "docker push arturheath/pdfrontend:${IMAGE_TAG}"
+                        sh "docker build -t arturheath/pdfrontend:${IMAGE_TAG} ."
+                        echo 'Pushing Frontend Image'
+                        docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                            sh "docker push arturheath/pdfrontend:${IMAGE_TAG}"
+                        }
                     }
                 }
             }

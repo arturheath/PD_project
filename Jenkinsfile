@@ -8,7 +8,10 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+        stage('Build Backend') {
+            when {
+                changeset "**/backend/**"
+            }
             steps {
                 echo 'Building backend...'
                 script {
@@ -16,6 +19,13 @@ pipeline {
                         sh 'mvn clean install -DskipTests' // Builds the project and skips the tests
                     }
                 }
+            }
+        }
+        stage('Build Frontend') {
+            when {
+                changeset "**/frontend/**"
+            }
+            steps {
                 echo 'Building frontend...'
                 script {
                     dir('frontend/pd-movies-presentation') { 

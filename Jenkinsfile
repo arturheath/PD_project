@@ -67,8 +67,9 @@ pipeline {
         stage('Deploy with Ansible') {
             steps {
                 script {
-                    // Run Ansible playbook
-                    sh "docker run --name pd-ansible -v /var/run/docker.sock:/var/run/docker.sock -p 9123:80 --rm pd-ansible"
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "docker run --name pd-ansible -v /var/run/docker.sock:/var/run/docker.sock -v \$(pwd):/ansible -w /ansible -e docker_username=${DOCKER_USERNAME} -e docker_password=${DOCKER_PASSWORD} pd-ansible ansible-playbook -i inventory playbook.yml"
+                    }
                 }
             }
         }

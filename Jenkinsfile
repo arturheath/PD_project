@@ -56,8 +56,8 @@ pipeline {
                 echo 'Testing frontend...'
                 script {
                     dir('frontend/pd-movies-presentation') {
-                        // sh 'npm install'
-                        // sh 'npm test'
+                         sh 'npm install'
+                         sh 'npm test'
                     }
                 }
             }

@@ -35,7 +35,6 @@ pipeline {
                 }
             }
         }
-        stages {
         stage('Test Backend') {
             when {
                 changeset "**/backend/**"

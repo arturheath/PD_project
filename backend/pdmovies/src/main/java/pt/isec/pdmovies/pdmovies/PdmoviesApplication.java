@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PdmoviesApplication {
     public static void main(String[] args) {
-        //u
         SpringApplication.run(PdmoviesApplication.class, args);
     }
 

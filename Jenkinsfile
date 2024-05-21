@@ -21,10 +21,7 @@ pipeline {
         stage('Build Backend') {
             when {
                 expression {
-                    def runFull = params.RUN_FULL_PIPELINE.toBoolean()
-                    def hasBackendChanges = changeset("**/backend/**")
-                    echo "Debug - Run Full Pipeline: ${runFull}, Backend Changes Detected: ${hasBackendChanges}"
-                    return runFull || hasBackendChanges
+                    return params.RUN_FULL_PIPELINE.toBoolean() || changeset("**/backend/**")
                 }
             }
             steps {

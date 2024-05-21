@@ -114,4 +114,30 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            emailext(
+                subject: "BUILD ${BUILD_STATUS}: Job '${JOB_NAME}' (${BUILD_NUMBER})",
+                body: """<p>Build Status: ${BUILD_STATUS}</p>
+                         <p>Check console output at <a href="${BUILD_URL}console">here</a></p>""",
+                to: "a2023115071@isec.pt",
+                mimeType: 'text/html'
+            )
+        }
+        failure {
+            emailext(
+                subject: "FAILED: Job '${JOB_NAME}' (${BUILD_NUMBER})",
+                body: "Something is wrong with the build ${BUILD_NUMBER}",
+                to: "a2023115071@isec.pt"
+            )
+        }
+        success {
+            emailext(
+                subject: "SUCCESS: Job '${JOB_NAME}' (${BUILD_NUMBER})",
+                body: "Build ${BUILD_NUMBER} completed successfully",
+                to: "a2023115071@isec.pt"
+            )
+        }
+    }
 }

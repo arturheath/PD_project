@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_HOST = "host.docker.internal:2375"
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
-        IMAGE_TAG = "latest"  // Consider using a more unique tag like "${env.BUILD_NUMBER}" in the future
+        IMAGE_TAG = "latest"
     }
 
     stages {
@@ -16,7 +16,7 @@ pipeline {
                 echo 'Building backend...'
                 script {
                     dir('backend/pdmovies') {
-                        sh 'mvn clean install -DskipTests' // Builds the project and skips the tests
+                        sh 'mvn clean install -DskipTests'
                     }
                 }
             }

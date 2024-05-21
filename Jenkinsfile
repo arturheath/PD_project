@@ -116,26 +116,24 @@ pipeline {
     }
 
     post {
-        always {
-            emailext(
-                subject: "BUILD ${BUILD_STATUS}: Job '${JOB_NAME}' (${BUILD_NUMBER})",
-                body: """<p>Build Status: ${BUILD_STATUS}</p>
-                         <p>Check console output at <a href="${BUILD_URL}console">here</a></p>""",
-                to: "a2023115071@isec.pt",
-                mimeType: 'text/html'
-            )
-        }
         failure {
             emailext(
-                subject: "FAILED: Job '${JOB_NAME}' (${BUILD_NUMBER})",
-                body: "Something is wrong with the build ${BUILD_NUMBER}",
+                subject: "FAILED: Job pd_movies",
+                body: "Something is wrong with the pipeline for pd_movies",
                 to: "a2023115071@isec.pt"
             )
         }
         success {
             emailext(
-                subject: "SUCCESS: Job '${JOB_NAME}' (${BUILD_NUMBER})",
-                body: "Build ${BUILD_NUMBER} completed successfully",
+                subject: "SUCCESS: Job pd_movies",
+                body: "Pipeline for pd_movies completed successfully",
+                to: "a2023115071@isec.pt"
+            )
+        }
+        aborted {
+            emailext(
+                subject: "ABORTED: Job pd_movies",
+                body: "Pipeline for pd_movies has been aborted",
                 to: "a2023115071@isec.pt"
             )
         }

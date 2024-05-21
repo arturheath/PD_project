@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        booleanParam(name: 'RUN_FULL_PIPELINE', defaultValue: false, description: 'Check this to run the full pipeline regardless of changes')
+    }
+
     environment {
         DOCKER_HOST = "host.docker.internal:2375"
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
@@ -10,7 +14,9 @@ pipeline {
     stages {
         stage('Build Backend') {
             when {
-                changeset "**/backend/**"
+                expression {
+                    return params.RUN_FULL_PIPELINE || changeset("**/backend/**")
+                }
             }
             steps {
                 echo 'Building backend...'
@@ -23,7 +29,9 @@ pipeline {
         }
         stage('Build Frontend') {
             when {
-                changeset "**/frontend/**"
+                expression {
+                    return params.RUN_FULL_PIPELINE || changeset("**/frontend/**")
+                }
             }
             steps {
                 echo 'Building frontend...'
@@ -37,7 +45,9 @@ pipeline {
         }
         stage('Test Backend') {
             when {
-                changeset "**/backend/**"
+                expression {
+                    return params.RUN_FULL_PIPELINE || changeset("**/backend/**")
+                }
             }
             steps {
                 echo 'Testing backend...'
@@ -50,21 +60,25 @@ pipeline {
         }
         stage('Test Frontend') {
             when {
-                changeset "**/frontend/**"
+                expression {
+                    return params.RUN_FULL_PIPELINE || changeset("**/frontend/**")
+                }
             }
             steps {
                 echo 'Testing frontend...'
                 script {
                     dir('frontend/pd-movies-presentation') {
-                         // sh 'npm install'
-                         // sh 'npm test'
+                        // sh 'npm install'
+                        // sh 'npm test'
                     }
                 }
             }
         }
         stage('Dockerize and Push Backend') {
             when {
-                changeset "**/backend/**"
+                expression {
+                    return params.RUN_FULL_PIPELINE || changeset("**/backend/**")
+                }
             }
             steps {
                 script {
@@ -81,7 +95,9 @@ pipeline {
         }
         stage('Dockerize and Push Frontend') {
             when {
-                changeset "**/frontend/**"
+                expression {
+                    return params.RUN_FULL_PIPELINE || changeset("**/frontend/**")
+                }
             }
             steps {
                 script {
@@ -97,6 +113,7 @@ pipeline {
             }
         }
         stage('Deploy with Ansible') {
+            // No condition needed here as deployment might depend on the results of previous stages
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {

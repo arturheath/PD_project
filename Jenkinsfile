@@ -15,7 +15,7 @@ pipeline {
         stage('Build Backend') {
             when {
                 expression {
-                    return params.RUN_FULL_PIPELINE.toBoolean() || changeset("**/backend/**")
+                    return params.RUN_FULL_PIPELINE || changeset("**/backend/**")
                 }
             }
             steps {
@@ -30,7 +30,7 @@ pipeline {
         stage('Build Frontend') {
             when {
                 expression {
-                    return params.RUN_FULL_PIPELINE.toBoolean() || changeset("**/frontend/**")
+                    return params.RUN_FULL_PIPELINE || changeset("**/frontend/**")
                 }
             }
             steps {
@@ -46,7 +46,7 @@ pipeline {
         stage('Test Backend') {
             when {
                 expression {
-                    return params.RUN_FULL_PIPELINE.toBoolean() || changeset("**/backend/**")
+                    return params.RUN_FULL_PIPELINE || changeset("**/backend/**")
                 }
             }
             steps {
@@ -61,14 +61,13 @@ pipeline {
         stage('Test Frontend') {
             when {
                 expression {
-                    return params.RUN_FULL_PIPELINE.toBoolean() || changeset("**/frontend/**")
+                    return params.RUN_FULL_PIPELINE || changeset("**/frontend/**")
                 }
             }
             steps {
                 echo 'Testing frontend...'
                 script {
                     dir('frontend/pd-movies-presentation') {
-                        
                         // sh 'npm install'
                         // sh 'npm test'
                     }
@@ -78,7 +77,7 @@ pipeline {
         stage('Dockerize and Push Backend') {
             when {
                 expression {
-                    return params.RUN_FULL_PIPELINE.toBoolean() || changeset("**/backend/**")
+                    return params.RUN_FULL_PIPELINE || changeset("**/backend/**")
                 }
             }
             steps {
@@ -97,7 +96,7 @@ pipeline {
         stage('Dockerize and Push Frontend') {
             when {
                 expression {
-                    return params.RUN_FULL_PIPELINE.toBoolean() || changeset("**/frontend/**")
+                    return params.RUN_FULL_PIPELINE || changeset("**/frontend/**")
                 }
             }
             steps {
@@ -114,9 +113,11 @@ pipeline {
             }
         }
         stage('Deploy with Ansible') {
+            // No condition needed here as deployment might depend on the results of previous stages
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        // Securely passing environment variables
                         sh """
                         docker run --name pd-ansible \
                           -v /var/run/docker.sock:/var/run/docker.sock \

@@ -10,14 +10,8 @@ pipeline {
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         IMAGE_TAG = "latest"
     }
+
     stages {
-        stage('Debug Parameters') {
-            steps {
-                script {
-                    echo "RUN_FULL_PIPELINE: ${params.RUN_FULL_PIPELINE}"
-                }
-            }
-        }
         stage('Build Backend') {
             when {
                 expression {
